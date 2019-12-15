@@ -12,8 +12,13 @@ class block_simplehtml extends block_base {
      
         $this->content         =  new stdClass;
         $this->content->text   = 'The content of our SimpleHTML block!';
-        $this->content->footer = 'Footer here...';
-     
+        global $COURSE;
+ 
+        // The other code.
+        
+        $url = new moodle_url('/blocks/simplehtml/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+        $this->content->footer = html_writer::link($url, get_string('addpage', 'block_simplehtml'));
+            
         return $this->content;
     }
     public function specialization() {
