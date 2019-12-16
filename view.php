@@ -11,6 +11,7 @@ $blockid = required_param('blockid', PARAM_INT);
  
 // Next look for optional variables.
 $id = optional_param('id', 0, PARAM_INT);
+$viewpage = optional_param('viewpage', false, PARAM_BOOL);
  
  
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
@@ -23,6 +24,10 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_heading(get_string('edithtml', 'block_simplehtml'));
  
 $simplehtml = new simplehtml_form();
+$toform['blockid'] = $blockid;
+$toform['courseid'] = $courseid;
+$toform['id'] = $id;
+$simplehtml->set_data($toform);
 
 if($simplehtml->is_cancelled()) {
     // Cancelled forms redirect to the course main page.
@@ -37,12 +42,33 @@ if($simplehtml->is_cancelled()) {
     // We need to add code to appropriately act on and store the submitted data
     // but for now we will just redirect back to the course main page.
     $courseurl = new moodle_url('/course/view.php', array('id' => $courseid));
-    redirect($courseurl);
+    // We need to add code to appropriately act on and store the submitted data
+    if ($fromform->id != 0) {
+        if (!$DB->update_record('block_simplehtml', $fromform)) {
+            print_error('updateerror', 'block_simplehtml');
+        }
+    } else {
+        if (!$DB->insert_record('block_simplehtml', $fromform)) {
+            print_error('inserterror', 'block_simplehtml');
+        }
+    }
+    // redirect($courseurl);
+    print_object($fromform);
 } else {
     // form didn't validate or this is the first display
     $site = get_site();
     echo $OUTPUT->header();
-    $simplehtml->display();
+    if ($id) {
+        $simplehtmlpage = $DB->get_record('block_simplehtml', array('id' => $id));
+        if($viewpage) {
+            block_simplehtml_print_page($simplehtmlpage);
+        } else {
+            $simplehtml->set_data($simplehtmlpage);
+            $simplehtml->display();
+        }
+    } else {
+        $simplehtml->display();
+    }
     echo $OUTPUT->footer();
 }
 echo $OUTPUT->header();

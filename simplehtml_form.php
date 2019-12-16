@@ -14,7 +14,7 @@ class simplehtml_form extends moodleform {
         $mform->addRule('pagetitle', null, 'required', null, 'client');
         
         // add display text field
-        $mform->addElement('htmleditor', 'displaytext', get_string('displayedhtml', 'block_simplehtml'));
+        $mform->addElement('editor', 'displaytext', get_string('displayedhtml', 'block_simplehtml'));
         $mform->setType('displaytext', PARAM_RAW);
         $mform->addRule('displaytext', null, 'required', null, 'client');
         // add filename selection.
@@ -43,8 +43,12 @@ class simplehtml_form extends moodleform {
         $mform->addElement('date_time_selector', 'displaydate', get_string('displaydate', 'block_simplehtml'), array('optional' => true));
         $mform->setAdvanced('optional');
         // hidden elements
-    $mform->addElement('hidden', 'blockid');
-    $mform->addElement('hidden', 'courseid');
+        $mform->addElement('hidden', 'blockid');
+        $mform->setType('blockid', PARAM_RAW);
+        $mform->addElement('hidden', 'courseid');
+        $mform->setType('courseid', PARAM_RAW);
+        $mform->addElement('hidden','id','0');
+        $mform->setType('id', PARAM_RAW);
         $this->add_action_buttons();
 
     }

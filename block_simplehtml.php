@@ -12,15 +12,47 @@ class block_simplehtml extends block_base {
      
         $this->content         =  new stdClass;
         $this->content->text   = 'The content of our SimpleHTML block!';
-        global $COURSE;
- 
-        // The other code.
+        global $COURSE, $DB,$PAGE; 
+
+        if (!empty($this->config->text)) {
+            $this->content->text = $this->config->text;
+        }
         
-        $url = new moodle_url('/blocks/simplehtml/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
-        $this->content->footer = html_writer::link($url, get_string('addpage', 'block_simplehtml'));
-            
-        return $this->content;
-    }
+        // This is the new code.
+        $canmanage = $PAGE->user_is_editing($this->instance->id);
+        if ($simplehtmlpages = $DB->get_records('block_simplehtml', array('blockid' => $this->instance->id))) {
+            $this->content->text .= html_writer::start_tag('ul');
+            foreach ($simplehtmlpages as $simplehtmlpage) {
+                if ($canmanage) {
+                    $pageparam = array('blockid' => $this->instance->id, 'courseid' => $COURSE->id,'id' => $simplehtmlpage->id);
+                    $editurl = new moodle_url('/blocks/simplehtml/view.php', $pageparam);
+                    $editpicurl = new moodle_url('/pix/t/edit.gif');
+                    $edit = html_writer::link($editurl, html_writer::tag('img', '', array('src' => $editpicurl, 'alt' => get_string('edit'))));
+                    //delete
+                    $deleteparam = array('id' => $simplehtmlpage->id, 'courseid' => $COURSE->id);
+                    $deleteurl = new moodle_url('/blocks/simplehtml/delete.php', $deleteparam);
+                    $deletepicurl = new moodle_url('/pix/t/delete.gif');
+                    $delete = html_writer::link($deleteurl, html_writer::tag('img', '', array('src' => $deletepicurl, 'alt' => get_string('delete'))));
+                } else {
+                    $edit = '';
+                    $delete = '';
+                }
+                $pageurl = new moodle_url('/blocks/simplehtml/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id, 'id' => $simplehtmlpage->id, 'viewpage' => true));
+                $this->content->text .= html_writer::start_tag('li');
+                $this->content->text .= html_writer::link($pageurl, $simplehtmlpage->pagetitle);
+                $this->content->text .= $edit;
+                $this->content->text .= $delete;
+                $this->content->text .= html_writer::end_tag('li');
+            }
+            $this->content->text .= html_writer::end_tag('ul');
+        }
+                // The other code.
+                
+                $url = new moodle_url('/blocks/simplehtml/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+                $this->content->footer = html_writer::link($url, get_string('addpage', 'block_simplehtml'));
+                    
+                return $this->content;
+            }
     public function specialization() {
         if (isset($this->config)) {
             if (empty($this->config->title)) {
@@ -61,4 +93,8 @@ class block_simplehtml extends block_base {
                    'mod-quiz' => false
         );
       }
+      public function instance_delete() {
+        global $DB;
+        $DB->delete_records('block_simplehtml', array('blockid' => $this->instance->id));
+    }
 }
