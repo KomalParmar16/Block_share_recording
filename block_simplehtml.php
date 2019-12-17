@@ -19,7 +19,9 @@ class block_simplehtml extends block_base {
         }
         
         // This is the new code.
-        $canmanage = $PAGE->user_is_editing($this->instance->id);
+        $context = context_course::instance($COURSE->id);
+        $canmanage = has_capability('block/simplehtml:managepages', $context) && $PAGE->user_is_editing($this->instance->id);
+        $canview = has_capability('block/simplehtml:viewpages', $context);
         if ($simplehtmlpages = $DB->get_records('block_simplehtml', array('blockid' => $this->instance->id))) {
             $this->content->text .= html_writer::start_tag('ul');
             foreach ($simplehtmlpages as $simplehtmlpage) {
@@ -39,18 +41,25 @@ class block_simplehtml extends block_base {
                 }
                 $pageurl = new moodle_url('/blocks/simplehtml/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id, 'id' => $simplehtmlpage->id, 'viewpage' => true));
                 $this->content->text .= html_writer::start_tag('li');
-                $this->content->text .= html_writer::link($pageurl, $simplehtmlpage->pagetitle);
+                if ($canview) {
+                    $this->content->text .= html_writer::link($pageurl, $simplehtmlpage->pagetitle);
+                } else {
+                    $this->content->text .= html_writer::tag('div', $simplehtmlpage->pagetitle);
+                }
                 $this->content->text .= $edit;
                 $this->content->text .= $delete;
                 $this->content->text .= html_writer::end_tag('li');
             }
             $this->content->text .= html_writer::end_tag('ul');
         }
-                // The other code.
-                
-                $url = new moodle_url('/blocks/simplehtml/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
-                $this->content->footer = html_writer::link($url, get_string('addpage', 'block_simplehtml'));
-                    
+    
+ 
+        if (has_capability('block/simplehtml:managepages', $context)) {
+            $url = new moodle_url('/blocks/simplehtml/view.php', array('blockid' => $this->instance->id, 'courseid' => $COURSE->id));
+            $this->content->footer = html_writer::link($url, get_string('addpage', 'block_simplehtml'));
+                } else {
+                    $this->content->footer = '';
+                }
                 return $this->content;
             }
     public function specialization() {

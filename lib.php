@@ -11,11 +11,7 @@ function block_simplehtml_print_page($simplehtml, $return = false) {
     if($simplehtml->displaydate) {
         $display .= userdate($simplehtml->displaydate);
     }
-    if($return) {
-        return $display;
-    } else {
-        echo $display;
-    }
+ 
     $display .= clean_text($simplehtml->displaytext);
  
     //close the box
@@ -29,6 +25,11 @@ function block_simplehtml_print_page($simplehtml, $return = false) {
         $display .= clean_text($simplehtml->description);
         $display .= html_writer::end_tag('p');
         $display .= $OUTPUT->box_end();
+    }
+    if($return) {
+        return $display;
+    } else {
+        echo $display;
     }
 }
 ?>

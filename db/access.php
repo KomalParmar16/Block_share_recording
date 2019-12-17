@@ -1,6 +1,8 @@
 <?php
-    $capabilities = array(
+defined('MOODLE_INTERNAL') || die();
  
+$capabilities = array(
+
     'block/simplehtml:myaddinstance' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
@@ -23,10 +25,6 @@
  
         'clonepermissionsfrom' => 'moodle/site:manageblocks'
     ),
-);
-defined('MOODLE_INTERNAL') || die();
- 
-$capabilities = array(
  
     'block/simplehtml:viewpages' => array(
  
