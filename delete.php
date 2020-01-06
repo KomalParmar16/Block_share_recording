@@ -10,7 +10,7 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
 }
  
 require_login($course);
- 
+require_capability('block/simplehtml:managepages', context_course::instance($courseid));
 if(! $simplehtmlpage = $DB->get_record('block_simplehtml', array('id' => $id))) {
     print_error('nopage', 'block_simplehtml', '', $id);
 }

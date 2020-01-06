@@ -31,3 +31,4 @@ $string['green'] = 'Green';
 $string['blue'] = 'Blue';
 $string['simplehtml:viewpages'] = 'View Simple HTML Pages';
 $string['simplehtml:managepages'] = 'Manage Simple HTML Pages';
+$string['deletepage'] = 'Delete Page'; 

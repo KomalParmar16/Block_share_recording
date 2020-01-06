@@ -76,6 +76,9 @@ class block_simplehtml extends block_base {
         }
     }
     function has_config() {return true;}
+    public function instance_allow_multiple() {
+        return true;
+      }
 
     public function instance_config_save($data, $nolongerused = false) {
         if(get_config('simplehtml', 'Allow_HTML') == '1') {
@@ -99,6 +102,7 @@ class block_simplehtml extends block_base {
                 'course-view' => true, 
          'course-view-social' => false,
                         'mod' => true, 
+                        'my'  => true,
                    'mod-quiz' => false
         );
       }
