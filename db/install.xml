@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/simplehtml/db" VERSION="20191212" COMMENT="XMLDB file for Moodle blocks/simplehtml"
+<XMLDB PATH="blocks/share_recording/db" VERSION="20200806" COMMENT="XMLDB file for Moodle blocks/simplehtml"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="block_simplehtml" COMMENT="Default comment for block_simplehtml, please edit me">
+    <TABLE NAME="block_share_recording" COMMENT="Default comment for block_share_recording, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="blockid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="blockid is a foreign key that references the block table"/>
-        <FIELD NAME="pagetitle" TYPE="char" LENGTH="25" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="displaytext" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="format" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="filename" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="picture" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="displaypicture" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="displaydate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="sessionid" TYPE="char" LENGTH="250" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="recordinglink" TYPE="char" LENGTH="1333" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
