@@ -49,16 +49,17 @@ class block_share_recording extends block_base
                         'recordingname' => $recordinglist->recordingname
                     )), html_writer::empty_tag('img', array(
                         'src' => $imageurl,
-                        'alt' => 'delete', 'class' => 'iconsmall delete'
+                        'width' => '16px',
+                        'alt' => 'delete', 'class' => 'iconsmall delete mx-2'
                     )), array('title' => 'delete'));
                 }
                 $this->content->text .= html_writer::start_tag('li');
-                $this->content->text .= html_writer::link($recordinglist->recordinglink, $recordinglist->recordingname);
-                $this->content->text .= html_writer::end_tag('li');
-                if ($DB->get_record('role', array('shortname' => 'editingteacher'), '*', MUST_EXIST)) {
+                $this->content->text .= html_writer::link($recordinglist->recordinglink, $recordinglist->recordingname, array('target' => '_blank'));
+                if (has_capability('block/sharerecording:managepages', context_course::instance($COURSE->id))) {    
                     $this->content->text .= $buttons;
                 }
             }
+            $this->content->text .= html_writer::end_tag('li');
             $this->content->text .= html_writer::end_tag('ul');
         }
         return $this->content;
