@@ -10,7 +10,7 @@ if (!$course = $DB->get_record('course', array('id' => $courseid))) {
 }
 
 require_login($course);
-require_capability('block/sharerecording:managepages', context_course::instance($courseid));
+require_capability('block/sharerecording:addinstance', context_course::instance($courseid));
 if (! $sharerecordingpage = $DB->get_record('block_share_recording', array('id' => $id))) {
     print_error('nopage', 'block_simplehtml', '', $id);
 }

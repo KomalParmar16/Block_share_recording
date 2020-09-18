@@ -10,6 +10,7 @@
  * @param int $congreaid
  * @return string
  * */
+defined('MOODLE_INTERNAL') || die();
 function sharerecordingdetail($url, $sharesessionid, $sharesessionname, $recordinglink, $courseid, $instanceid) {
     global $DB;
     $link = $url.'?'.$recordinglink;

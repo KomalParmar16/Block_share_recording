@@ -1,30 +1,50 @@
 <?php
-class block_share_recording extends block_base
-{
-    public function init()
-    {
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Share recording block.
+ *
+ * @package   block_share_recording
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+class block_share_recording extends block_base {
+    function init() {
         $this->title = get_string('pluginname', 'block_share_recording');
     }
     
-    public function applicable_formats()
-    {
+    function applicable_formats() {
         return array(
                  'site-index' => true,
-                'course-view' => true,
+                     'course' => true,
          'course-view-social' => false,
-                        'mod' => true,
-                        'my'  => true,
+                        'mod' => false,
+                        'my'  => false,
                    'mod-quiz' => false
         );
     }
 
-    public function has_config()
+    function has_config()
     {
         return true;
     }
 
-    public function get_content() {
-
+    function get_content() {
+        global $DB, $CFG, $COURSE;
         if ($this->content !== null) {
             return $this->content;
         }
@@ -33,7 +53,10 @@ class block_share_recording extends block_base
         $this->content->footer = '';
         $this->content->text   = '';
 
-        global $DB, $CFG, $COURSE;
+        if (empty($this->config)) {
+            $this->config = new stdClass();
+        }
+
         if (empty($this->instance)) {
             return $this->content;
         }
@@ -42,7 +65,7 @@ class block_share_recording extends block_base
             foreach ($recordinglists as $recordinglist) {
                 $deleteparam = array('id' => $recordinglist->id, 'courseid' => $COURSE->id);
                 $deleteurl = new moodle_url('/blocks/share_recording/delete.php', $deleteparam);
-                if (has_capability('block/sharerecording:managepages', context_course::instance($COURSE->id))) {
+                if (has_capability('block/sharerecording:addinstance', context_course::instance($COURSE->id))) {
                     $imageurl = "$CFG->wwwroot/blocks/share_recording/pix/delete.png";
                     $buttons = html_writer::link(new moodle_url($deleteurl, array(
                         'deleterecording' => $recordinglist->sessionid,
@@ -55,7 +78,7 @@ class block_share_recording extends block_base
                 }
                 $this->content->text .= html_writer::start_tag('li');
                 $this->content->text .= html_writer::link($recordinglist->recordinglink, $recordinglist->recordingname, array('target' => '_blank'));
-                if (has_capability('block/sharerecording:managepages', context_course::instance($COURSE->id))) {    
+                if (has_capability('block/sharerecording:addinstance', context_course::instance($COURSE->id))) {    
                     $this->content->text .= $buttons;
                 }
             }
@@ -64,11 +87,14 @@ class block_share_recording extends block_base
         }
         return $this->content;
     }
-    public function instance_allow_config() {
+    function instance_allow_config() {
+        return true;
+    }
+    function instance_allow_multiple() {
         return true;
     }
 
-    public function instance_config_save($data, $nolongerused = false) {
+    function instance_config_save($data, $nolongerused = false) {
         if (get_config('sharerecording', 'Allow_HTML') == '1') {
             $data->text = strip_tags($data->text);
         }
